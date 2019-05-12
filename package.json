@@ -1,0 +1,16 @@
+{
+  "name": "gulptask-webpack",
+  "version": "0.1.0",
+  "description": "webpack bundle task for gulp.js",
+  "main": "./index.js",
+  "repository": "https://MasatoMakino@github.com/MasatoMakino/gulptask-webpack.git",
+  "author": "MasatoMakino <unagiinu.g@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "webpack": "^4.31.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.17.0"
+  }
+}
