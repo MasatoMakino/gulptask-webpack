@@ -3,7 +3,7 @@ const {
     bundleDevelopment,
     bundleProduction,
     watchBundle,
-} = require("./index")("./webpack.config.js");
+} = require("./index")("./sample/webpack.config.js");
 
 exports.bundleDevelopment = bundleDevelopment;
 exports.bundleProduction = bundleProduction;
