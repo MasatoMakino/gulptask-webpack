@@ -12,11 +12,13 @@ const path = require("path");
 
 /**
  * webpackでファイルをバンドルする関数を取得する
- * @param {string} configPath webpack.config.jsファイルのパス。 package.jsonからの相対パス。 e.g. "./webpack.config.js"
+ * @param {string} configPath webpack.config.jsファイルのパス。 package.jsonからの相対パス or 絶対パス e.g. "./webpack.config.js"
  * @return {Tasks} バンドルタスクのセット
  */
 module.exports = configPath => {
-  configPath = path.resolve(process.cwd(), configPath);
+  if (!path.isAbsolute(configPath)) {
+    configPath = path.resolve(process.cwd(), configPath);
+  }
 
   const getConfig = mode => {
     const config = require(configPath);
