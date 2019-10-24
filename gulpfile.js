@@ -1,6 +1,6 @@
 "use strict";
 const { bundleDevelopment, bundleProduction, watchBundle } = require("./index")(
-  "./sample/webpack.config.js"
+  "./sample/webpack.tsloader.config.js"
 );
 
 exports.bundleDevelopment = bundleDevelopment;

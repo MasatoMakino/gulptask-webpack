@@ -40,6 +40,7 @@ module.exports = configPath => {
       handleStats(stats);
       if (err || stats.hasErrors()) {
         // Handle errors here
+        cb( err );
       }
       cb();
     });
@@ -55,7 +56,9 @@ module.exports = configPath => {
   const handleStats = stats => {
     if (stats == null) return;
     if (stats.hasErrors()) {
-      // Handle errors here
+      stats.compilation.errors.forEach( err =>{
+        console.log( err.message );
+      });
       return;
     }
     console.log(

@@ -6,7 +6,8 @@ module.exports = {
   entry: { main: path.resolve(process.cwd(), "sample/js/main.js") },
   output: {
     path: path.resolve(process.cwd(), "dist/js"),
-    filename: "[name].js"
+    filename: "[name].js",
+    chunkFilename: "[name].bundle.js",
   },
   resolve: {
     extensions: [".js", ".webpack.js", ".web.js"]
@@ -19,5 +20,17 @@ module.exports = {
       }
     ]
   },
-  plugins: []
+  plugins: [],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: "initial",
+          name: "vendor",
+          test: /node_modules/,
+          enforce: true
+        }
+      }
+    }
+  }
 };
