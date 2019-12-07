@@ -3,24 +3,24 @@
 const webpack = require("webpack");
 const path = require("path");
 
-/**
- * @typedef {Object} Tasks
- * @property {function} watchBundle - watchタスク modeはdevelopment。
- * @property {function} bundleDevelopment - mode development のバンドルタスク
- * @property {function} bundleProduction - mode production のバンドルタスク
- */
+export interface Tasks {
+  bundleDevelopment: Function;
+  bundleProduction: Function;
+  watchBundle: Function;
+}
 
 /**
  * webpackでファイルをバンドルする関数を取得する
  * @param {string} configPath webpack.config.jsファイルのパス。 package.jsonからの相対パス or 絶対パス e.g. "./webpack.config.js"
  * @return {Tasks} バンドルタスクのセット
  */
-module.exports = configPath => {
+
+export function get(configPath: string): Tasks {
   if (!path.isAbsolute(configPath)) {
     configPath = path.resolve(process.cwd(), configPath);
   }
 
-  const getConfig = mode => {
+  const getConfig = (mode: "development" | "production") => {
     const config = require(configPath);
     config.mode = mode;
     return config;
@@ -28,19 +28,19 @@ module.exports = configPath => {
   const compilerDevelopment = webpack(getConfig("development"));
   const compilerProduction = webpack(getConfig("production"));
 
-  const bundleProduction = cb => {
+  const bundleProduction = (cb: Function) => {
     compile(cb, compilerProduction);
   };
-  const bundleDevelopment = cb => {
+  const bundleDevelopment = (cb: Function) => {
     compile(cb, compilerDevelopment);
   };
 
-  const compile = (cb, compiler) => {
+  const compile = (cb: Function, compiler) => {
     compiler.run((err, stats) => {
       handleStats(stats);
       if (err || stats.hasErrors()) {
         // Handle errors here
-        cb( err );
+        cb(err);
       }
       cb();
     });
@@ -56,8 +56,8 @@ module.exports = configPath => {
   const handleStats = stats => {
     if (stats == null) return;
     if (stats.hasErrors()) {
-      stats.compilation.errors.forEach( err =>{
-        console.log( err.message );
+      stats.compilation.errors.forEach(err => {
+        console.log(err.message);
       });
       return;
     }
@@ -73,4 +73,4 @@ module.exports = configPath => {
     bundleProduction: bundleProduction,
     watchBundle: watchBundle
   };
-};
+}
