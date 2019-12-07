@@ -1,29 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const webpack = require("webpack");
-const path = require("path");
+const Option_1 = require("./Option");
 /**
  * webpackでファイルをバンドルする関数を取得する
- * @param {string} configPath webpack.config.jsファイルのパス。 package.jsonからの相対パス or 絶対パス e.g. "./webpack.config.js"
- * @return {Tasks} バンドルタスクのセット
+ * @return バンドルタスクのセット
+ * @param option
  */
-function get(configPath) {
-    if (!path.isAbsolute(configPath)) {
-        configPath = path.resolve(process.cwd(), configPath);
+function get(option) {
+    var _a;
+    const compilerSet = Option_1.getCompilerSet(option);
+    let bundleProduction;
+    let bundleDevelopment;
+    if (compilerSet.compilerProduction) {
+        bundleProduction = (cb) => {
+            compile(cb, compilerSet.compilerProduction);
+        };
     }
-    const getConfig = (mode) => {
-        const config = require(configPath);
-        config.mode = mode;
-        return config;
-    };
-    const compilerDevelopment = webpack(getConfig("development"));
-    const compilerProduction = webpack(getConfig("production"));
-    const bundleProduction = (cb) => {
-        compile(cb, compilerProduction);
-    };
-    const bundleDevelopment = (cb) => {
-        compile(cb, compilerDevelopment);
-    };
+    if (compilerSet.compilerDevelopment) {
+        bundleDevelopment = (cb) => {
+            compile(cb, compilerSet.compilerDevelopment);
+        };
+    }
     const compile = (cb, compiler) => {
         compiler.run((err, stats) => {
             handleStats(stats);
@@ -34,9 +31,10 @@ function get(configPath) {
             cb();
         });
     };
+    const compilerWatcher = (_a = compilerSet.compilerDevelopment, (_a !== null && _a !== void 0 ? _a : compilerSet.compilerProduction));
     let watching;
     const watchBundle = () => {
-        watching = compilerDevelopment.watch({}, (err, stats) => {
+        watching = compilerWatcher.watch({}, (err, stats) => {
             handleStats(stats);
         });
     };
@@ -54,9 +52,9 @@ function get(configPath) {
             " ms");
     };
     return {
-        bundleDevelopment: bundleDevelopment,
-        bundleProduction: bundleProduction,
-        watchBundle: watchBundle
+        bundleDevelopment,
+        bundleProduction,
+        watchBundle
     };
 }
 exports.get = get;

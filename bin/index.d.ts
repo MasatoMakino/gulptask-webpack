@@ -1,3 +1,4 @@
+import { Option } from "./Option";
 export interface Tasks {
     bundleDevelopment: Function;
     bundleProduction: Function;
@@ -5,8 +6,8 @@ export interface Tasks {
 }
 /**
  * webpackでファイルをバンドルする関数を取得する
- * @param {string} configPath webpack.config.jsファイルのパス。 package.jsonからの相対パス or 絶対パス e.g. "./webpack.config.js"
- * @return {Tasks} バンドルタスクのセット
+ * @return バンドルタスクのセット
+ * @param option
  */
-export declare function get(configPath: string): Tasks;
+export declare function get(option: Option): Tasks;
 //# sourceMappingURL=index.d.ts.map
