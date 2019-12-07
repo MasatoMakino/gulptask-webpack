@@ -2,7 +2,8 @@
   "name": "gulptask-webpack",
   "version": "0.1.2",
   "description": "webpack bundle task for gulp.js",
-  "main": "src/index.js",
+  "main": "bin/index.js",
+  "types": "bin/index.d.ts",
   "repository": "https://MasatoMakino@github.com/MasatoMakino/gulptask-webpack.git",
   "author": "MasatoMakino <unagiinu.g@gmail.com>",
   "license": "MIT",
@@ -11,12 +12,13 @@
     "webpack": "^4.41.2"
   },
   "devDependencies": {
+    "@types/node": "^12.12.14",
     "moment": "^2.24.0",
     "prettier": "^1.19.1",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.3"
   },
   "scripts": {
-    "build": "npx tsc --project sample/tsconfig.json"
+    "build": "npx tsc --project tsconfig.json"
   }
 }
