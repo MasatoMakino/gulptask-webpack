@@ -1,5 +1,5 @@
 "use strict";
-const { bundleDevelopment, bundleProduction, watchBundle } = require("./index")(
+const { bundleDevelopment, bundleProduction, watchBundle } = require("./src")(
   "./sample/webpack.tsloader.config.js"
 );
 
