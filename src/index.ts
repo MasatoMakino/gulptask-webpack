@@ -1,7 +1,7 @@
 "use strict";
 
-const webpack = require("webpack");
-const path = require("path");
+import { Option } from "./Option";
+import { getCompilerSet } from "./Option";
 
 export interface Tasks {
   bundleDevelopment: Function;
@@ -11,29 +11,25 @@ export interface Tasks {
 
 /**
  * webpackでファイルをバンドルする関数を取得する
- * @param {string} configPath webpack.config.jsファイルのパス。 package.jsonからの相対パス or 絶対パス e.g. "./webpack.config.js"
- * @return {Tasks} バンドルタスクのセット
+ * @return バンドルタスクのセット
+ * @param option
  */
 
-export function get(configPath: string): Tasks {
-  if (!path.isAbsolute(configPath)) {
-    configPath = path.resolve(process.cwd(), configPath);
+export function get(option: Option): Tasks {
+  const compilerSet = getCompilerSet(option);
+
+  let bundleProduction;
+  let bundleDevelopment;
+  if (compilerSet.compilerProduction) {
+    bundleProduction = (cb: Function) => {
+      compile(cb, compilerSet.compilerProduction);
+    };
   }
-
-  const getConfig = (mode: "development" | "production") => {
-    const config = require(configPath);
-    config.mode = mode;
-    return config;
-  };
-  const compilerDevelopment = webpack(getConfig("development"));
-  const compilerProduction = webpack(getConfig("production"));
-
-  const bundleProduction = (cb: Function) => {
-    compile(cb, compilerProduction);
-  };
-  const bundleDevelopment = (cb: Function) => {
-    compile(cb, compilerDevelopment);
-  };
+  if (compilerSet.compilerDevelopment) {
+    bundleDevelopment = (cb: Function) => {
+      compile(cb, compilerSet.compilerDevelopment);
+    };
+  }
 
   const compile = (cb: Function, compiler) => {
     compiler.run((err, stats) => {
@@ -46,9 +42,11 @@ export function get(configPath: string): Tasks {
     });
   };
 
+  const compilerWatcher =
+    compilerSet.compilerDevelopment ?? compilerSet.compilerProduction;
   let watching;
   const watchBundle = () => {
-    watching = compilerDevelopment.watch({}, (err, stats) => {
+    watching = compilerWatcher.watch({}, (err, stats) => {
       handleStats(stats);
     });
   };
@@ -69,8 +67,8 @@ export function get(configPath: string): Tasks {
   };
 
   return {
-    bundleDevelopment: bundleDevelopment,
-    bundleProduction: bundleProduction,
-    watchBundle: watchBundle
+    bundleDevelopment,
+    bundleProduction,
+    watchBundle
   };
 }
