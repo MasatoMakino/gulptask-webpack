@@ -3,16 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const webpack = require("webpack");
 const path = require("path");
 function getCompilerSet(option) {
-    var _a, _b;
-    if (((_a = option) === null || _a === void 0 ? void 0 : _a.developmentConfigParams) || ((_b = option) === null || _b === void 0 ? void 0 : _b.productionConfigParams)) {
+    if ((option === null || option === void 0 ? void 0 : option.developmentConfigParams) || (option === null || option === void 0 ? void 0 : option.productionConfigParams)) {
         return getFromParams(option);
     }
     return getFromPath(option);
 }
 exports.getCompilerSet = getCompilerSet;
 function getFromPath(option) {
-    var _a, _b;
-    let configPath = (_b = (_a = option) === null || _a === void 0 ? void 0 : _a.configPath, (_b !== null && _b !== void 0 ? _b : "./webpack.config.json"));
+    var _a;
+    let configPath = (_a = option === null || option === void 0 ? void 0 : option.configPath) !== null && _a !== void 0 ? _a : "./webpack.config.json";
     if (!path.isAbsolute(configPath)) {
         configPath = path.resolve(process.cwd(), configPath);
     }

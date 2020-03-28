@@ -1,6 +1,6 @@
 {
   "name": "gulptask-webpack",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "webpack bundle task for gulp.js",
   "main": "bin/index.js",
   "types": "bin/index.d.ts",
@@ -9,14 +9,14 @@
   "license": "MIT",
   "dependencies": {
     "gulp": "^4.0.2",
-    "webpack": "^4.41.2"
+    "webpack": "^4.42.1"
   },
   "devDependencies": {
-    "@types/node": "^12.12.14",
+    "@types/node": "^13.9.5",
     "moment": "^2.24.0",
-    "prettier": "^1.19.1",
-    "ts-loader": "^6.2.1",
-    "typescript": "^3.7.3"
+    "prettier": "^2.0.2",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "build": "npx tsc --project tsconfig.json"

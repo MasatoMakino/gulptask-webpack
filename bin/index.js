@@ -31,7 +31,7 @@ function get(option) {
             cb();
         });
     };
-    const compilerWatcher = (_a = compilerSet.compilerDevelopment, (_a !== null && _a !== void 0 ? _a : compilerSet.compilerProduction));
+    const compilerWatcher = (_a = compilerSet.compilerDevelopment) !== null && _a !== void 0 ? _a : compilerSet.compilerProduction;
     let watching;
     const watchBundle = () => {
         watching = compilerWatcher.watch({}, (err, stats) => {
