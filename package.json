@@ -19,6 +19,7 @@
     "typescript": "^4.0.2"
   },
   "scripts": {
-    "build": "npx tsc --project tsconfig.json"
+    "build": "npx tsc --project tsconfig.json",
+    "run": "gulp bundleDevelopment"
   }
 }

@@ -1,7 +1,6 @@
 "use strict";
 
-import { Option } from "./Option";
-import { getCompilerSet } from "./Option";
+import { Option, getCompilerSet } from "./Option";
 
 export interface Tasks {
   bundleDevelopment: Function;
@@ -51,10 +50,10 @@ export function get(option: Option): Tasks {
     });
   };
 
-  const handleStats = stats => {
+  const handleStats = (stats) => {
     if (stats == null) return;
     if (stats.hasErrors()) {
-      stats.compilation.errors.forEach(err => {
+      stats.compilation.errors.forEach((err) => {
         console.log(err.message);
       });
       return;
@@ -69,6 +68,6 @@ export function get(option: Option): Tasks {
   return {
     bundleDevelopment,
     bundleProduction,
-    watchBundle
+    watchBundle,
   };
 }
