@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.get = void 0;
 const Option_1 = require("./Option");
 /**
  * webpackでファイルをバンドルする関数を取得する
@@ -38,11 +39,11 @@ function get(option) {
             handleStats(stats);
         });
     };
-    const handleStats = stats => {
+    const handleStats = (stats) => {
         if (stats == null)
             return;
         if (stats.hasErrors()) {
-            stats.compilation.errors.forEach(err => {
+            stats.compilation.errors.forEach((err) => {
                 console.log(err.message);
             });
             return;
@@ -54,7 +55,7 @@ function get(option) {
     return {
         bundleDevelopment,
         bundleProduction,
-        watchBundle
+        watchBundle,
     };
 }
 exports.get = get;
