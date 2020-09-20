@@ -52,15 +52,24 @@ function getFromPath(option: Option): CompilerSet {
 function getFromParams(option: Option): CompilerSet {
   const compilerSet: CompilerSet = {};
 
-  if (option.developmentConfigParams) {
-    option.developmentConfigParams.mode = "development";
-    compilerSet.compilerDevelopment = webpack(option.developmentConfigParams);
-  }
+  compilerSet.compilerDevelopment = generateCompiler(
+    option.developmentConfigParams,
+    "development"
+  );
 
-  if (option.productionConfigParams) {
-    option.productionConfigParams.mode = "production";
-    compilerSet.compilerProduction = webpack(option.productionConfigParams);
-  }
+  compilerSet.compilerProduction = generateCompiler(
+      option.productionConfigParams,
+      "production"
+  );
 
   return compilerSet;
+}
+
+function generateCompiler(
+  param: webpack.Configuration,
+  mode: "development" | "production"
+): webpack.Compiler {
+  if (!param) return undefined;
+  param.mode = mode;
+  return webpack(param);
 }
