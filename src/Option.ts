@@ -1,4 +1,4 @@
-const webpack = require("webpack");
+import webpack from "webpack";
 const path = require("path");
 
 /**
@@ -6,25 +6,28 @@ const path = require("path");
  */
 export interface Option {
   configPath?: string;
-  developmentConfigParams?: any;
-  productionConfigParams?: any;
+  developmentConfigParams?: webpack.Configuration;
+  productionConfigParams?: webpack.Configuration;
 }
 
 export interface CompilerSet {
-  compilerDevelopment?: any;
-  compilerProduction?: any;
+  compilerDevelopment?: webpack.Compiler;
+  compilerProduction?: webpack.Compiler;
 }
 
+/**
+ * コンパイラセットを取得する
+ * 渡されたオプションに応じ、FromPath関数かFromParams関数に分岐する。
+ * @param option
+ */
 export function getCompilerSet(option: Option): CompilerSet {
   if (option?.developmentConfigParams || option?.productionConfigParams) {
     return getFromParams(option);
   }
-
   return getFromPath(option);
 }
 
 function getFromPath(option: Option): CompilerSet {
-
   const normalizePath = (configPath: string): string => {
     const normalized = configPath ?? "./webpack.config.json";
     if (path.isAbsolute(normalized)) return normalized;
@@ -32,8 +35,10 @@ function getFromPath(option: Option): CompilerSet {
   };
   const configPath = normalizePath(option?.configPath);
 
-  const getConfig = (mode: "development" | "production") => {
-    const config = require(configPath);
+  const getConfig = (
+    mode: "development" | "production"
+  ): webpack.Configuration => {
+    const config: webpack.Configuration = require(configPath);
     config.mode = mode;
     return config;
   };

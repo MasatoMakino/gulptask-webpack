@@ -1,8 +1,16 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCompilerSet = void 0;
-const webpack = require("webpack");
+const webpack_1 = __importDefault(require("webpack"));
 const path = require("path");
+/**
+ * コンパイラセットを取得する
+ * 渡されたオプションに応じ、FromPath関数かFromParams関数に分岐する。
+ * @param option
+ */
 function getCompilerSet(option) {
     if ((option === null || option === void 0 ? void 0 : option.developmentConfigParams) || (option === null || option === void 0 ? void 0 : option.productionConfigParams)) {
         return getFromParams(option);
@@ -24,19 +32,19 @@ function getFromPath(option) {
         return config;
     };
     return {
-        compilerDevelopment: webpack(getConfig("development")),
-        compilerProduction: webpack(getConfig("production")),
+        compilerDevelopment: webpack_1.default(getConfig("development")),
+        compilerProduction: webpack_1.default(getConfig("production")),
     };
 }
 function getFromParams(option) {
     const compilerSet = {};
     if (option.developmentConfigParams) {
         option.developmentConfigParams.mode = "development";
-        compilerSet.compilerDevelopment = webpack(option.developmentConfigParams);
+        compilerSet.compilerDevelopment = webpack_1.default(option.developmentConfigParams);
     }
     if (option.productionConfigParams) {
         option.productionConfigParams.mode = "production";
-        compilerSet.compilerProduction = webpack(option.productionConfigParams);
+        compilerSet.compilerProduction = webpack_1.default(option.productionConfigParams);
     }
     return compilerSet;
 }

@@ -25,28 +25,18 @@ export function generateTasks(option: Option): Tasks {
   const compilerSet = getCompilerSet(option);
 
   let bundleProduction;
-  let bundleDevelopment;
   if (compilerSet.compilerProduction) {
     bundleProduction = (cb: Function) => {
       compile(cb, compilerSet.compilerProduction);
     };
   }
+
+  let bundleDevelopment;
   if (compilerSet.compilerDevelopment) {
     bundleDevelopment = (cb: Function) => {
       compile(cb, compilerSet.compilerDevelopment);
     };
   }
-
-  const compile = (cb: Function, compiler) => {
-    compiler.run((err, stats) => {
-      handleStats(stats);
-      if (err || stats.hasErrors()) {
-        // Handle errors here
-        cb(err);
-      }
-      cb();
-    });
-  };
 
   const compilerWatcher =
     compilerSet.compilerDevelopment ?? compilerSet.compilerProduction;
@@ -57,24 +47,43 @@ export function generateTasks(option: Option): Tasks {
     });
   };
 
-  const handleStats = (stats) => {
-    if (stats == null) return;
-    if (stats.hasErrors()) {
-      stats.compilation.errors.forEach((err) => {
-        console.log(err.message);
-      });
-      return;
-    }
-    console.log(
-      "'gulptask-webpack' process time : " +
-        (stats.endTime - stats.startTime) +
-        " ms"
-    );
-  };
-
   return {
     bundleDevelopment,
     bundleProduction,
     watchBundle,
   };
 }
+
+/**
+ * コンパイルを実行する
+ * @param cb コールバック関数
+ * @param compiler コンパイラ
+ */
+const compile = (cb: Function, compiler) => {
+  compiler.run((err, stats) => {
+    handleStats(stats);
+    if (err || stats.hasErrors()) {
+      cb(err);
+    }
+    cb();
+  });
+};
+
+/**
+ * 成功メッセージ、もしくはエラーメッセージをコンソール出力する。
+ * @param stats
+ */
+const handleStats = (stats) => {
+  if (stats == null) return;
+  if (stats.hasErrors()) {
+    stats.compilation.errors.forEach((err) => {
+      console.log(err.message);
+    });
+    return;
+  }
+  console.log(
+    "'gulptask-webpack' process time : " +
+      (stats.endTime - stats.startTime) +
+      " ms"
+  );
+};
