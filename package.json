@@ -21,6 +21,7 @@
   },
   "scripts": {
     "build": "npx tsc --project tsconfig.json",
-    "run": "gulp bundleDevelopment"
+    "run": "gulp bundleDevelopment",
+    "runProduction": "gulp bundleProduction"
   }
 }
