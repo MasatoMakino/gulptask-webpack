@@ -24,10 +24,13 @@ export function getCompilerSet(option: Option): CompilerSet {
 }
 
 function getFromPath(option: Option): CompilerSet {
-  let configPath: string = option?.configPath ?? "./webpack.config.json";
-  if (!path.isAbsolute(configPath)) {
-    configPath = path.resolve(process.cwd(), configPath);
-  }
+
+  const normalizePath = (configPath: string): string => {
+    const normalized = configPath ?? "./webpack.config.json";
+    if (path.isAbsolute(normalized)) return normalized;
+    return path.resolve(process.cwd(), normalized);
+  };
+  const configPath = normalizePath(option?.configPath);
 
   const getConfig = (mode: "development" | "production") => {
     const config = require(configPath);
@@ -37,7 +40,7 @@ function getFromPath(option: Option): CompilerSet {
 
   return {
     compilerDevelopment: webpack(getConfig("development")),
-    compilerProduction: webpack(getConfig("production"))
+    compilerProduction: webpack(getConfig("production")),
   };
 }
 
@@ -47,7 +50,6 @@ function getFromParams(option: Option): CompilerSet {
   if (option.developmentConfigParams) {
     option.developmentConfigParams.mode = "development";
     compilerSet.compilerDevelopment = webpack(option.developmentConfigParams);
-
   }
 
   if (option.productionConfigParams) {
