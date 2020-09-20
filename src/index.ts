@@ -1,5 +1,6 @@
 "use strict";
 
+import webpack from "webpack";
 import { Option, getCompilerSet } from "./Option";
 
 export interface Tasks {
@@ -24,19 +25,14 @@ export function get(option: Option): Tasks {
 export function generateTasks(option: Option): Tasks {
   const compilerSet = getCompilerSet(option);
 
-  let bundleProduction;
-  if (compilerSet.compilerProduction) {
-    bundleProduction = (cb: Function) => {
-      compile(cb, compilerSet.compilerProduction);
+  const generateBundleTask = (compiler: webpack.Compiler): Function => {
+    if (compiler == null) return undefined;
+    return (cb: Function) => {
+      compile(cb, compiler);
     };
-  }
-
-  let bundleDevelopment;
-  if (compilerSet.compilerDevelopment) {
-    bundleDevelopment = (cb: Function) => {
-      compile(cb, compilerSet.compilerDevelopment);
-    };
-  }
+  };
+  const bundleProduction = generateBundleTask(compilerSet.compilerProduction);
+  const bundleDevelopment = generateBundleTask(compilerSet.compilerDevelopment);
 
   const compilerWatcher =
     compilerSet.compilerDevelopment ?? compilerSet.compilerProduction;
