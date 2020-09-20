@@ -9,12 +9,19 @@ export interface Tasks {
 }
 
 /**
+ * @deprecated Use generateTasks
+ * @param option
+ */
+export function get(option: Option): Tasks {
+  return generateTasks(option);
+}
+
+/**
  * webpackでファイルをバンドルする関数を取得する
  * @return バンドルタスクのセット
  * @param option
  */
-
-export function get(option: Option): Tasks {
+export function generateTasks(option: Option): Tasks {
   const compilerSet = getCompilerSet(option);
 
   let bundleProduction;
