@@ -11,11 +11,13 @@ function getCompilerSet(option) {
 }
 exports.getCompilerSet = getCompilerSet;
 function getFromPath(option) {
-    var _a;
-    let configPath = (_a = option === null || option === void 0 ? void 0 : option.configPath) !== null && _a !== void 0 ? _a : "./webpack.config.json";
-    if (!path.isAbsolute(configPath)) {
-        configPath = path.resolve(process.cwd(), configPath);
-    }
+    const normalizePath = (configPath) => {
+        const normalized = configPath !== null && configPath !== void 0 ? configPath : "./webpack.config.json";
+        if (path.isAbsolute(normalized))
+            return normalized;
+        return path.resolve(process.cwd(), normalized);
+    };
+    const configPath = normalizePath(option === null || option === void 0 ? void 0 : option.configPath);
     const getConfig = (mode) => {
         const config = require(configPath);
         config.mode = mode;
@@ -23,7 +25,7 @@ function getFromPath(option) {
     };
     return {
         compilerDevelopment: webpack(getConfig("development")),
-        compilerProduction: webpack(getConfig("production"))
+        compilerProduction: webpack(getConfig("production")),
     };
 }
 function getFromParams(option) {

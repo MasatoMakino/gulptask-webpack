@@ -5,9 +5,14 @@ export interface Tasks {
     watchBundle: Function;
 }
 /**
+ * @deprecated Use generateTasks
+ * @param option
+ */
+export declare function get(option: Option): Tasks;
+/**
  * webpackでファイルをバンドルする関数を取得する
  * @return バンドルタスクのセット
  * @param option
  */
-export declare function get(option: Option): Tasks;
+export declare function generateTasks(option: Option): Tasks;
 //# sourceMappingURL=index.d.ts.map

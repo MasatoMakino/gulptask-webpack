@@ -1,13 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.get = void 0;
+exports.generateTasks = exports.get = void 0;
 const Option_1 = require("./Option");
+/**
+ * @deprecated Use generateTasks
+ * @param option
+ */
+function get(option) {
+    return generateTasks(option);
+}
+exports.get = get;
 /**
  * webpackでファイルをバンドルする関数を取得する
  * @return バンドルタスクのセット
  * @param option
  */
-function get(option) {
+function generateTasks(option) {
     var _a;
     const compilerSet = Option_1.getCompilerSet(option);
     let bundleProduction;
@@ -58,4 +66,4 @@ function get(option) {
         watchBundle,
     };
 }
-exports.get = get;
+exports.generateTasks = generateTasks;
