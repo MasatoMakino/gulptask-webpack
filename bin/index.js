@@ -18,18 +18,15 @@ exports.get = get;
 function generateTasks(option) {
     var _a;
     const compilerSet = Option_1.getCompilerSet(option);
-    let bundleProduction;
-    if (compilerSet.compilerProduction) {
-        bundleProduction = (cb) => {
-            compile(cb, compilerSet.compilerProduction);
+    const generateBundleTask = (compiler) => {
+        if (compiler == null)
+            return undefined;
+        return (cb) => {
+            compile(cb, compiler);
         };
-    }
-    let bundleDevelopment;
-    if (compilerSet.compilerDevelopment) {
-        bundleDevelopment = (cb) => {
-            compile(cb, compilerSet.compilerDevelopment);
-        };
-    }
+    };
+    const bundleProduction = generateBundleTask(compilerSet.compilerProduction);
+    const bundleDevelopment = generateBundleTask(compilerSet.compilerDevelopment);
     const compilerWatcher = (_a = compilerSet.compilerDevelopment) !== null && _a !== void 0 ? _a : compilerSet.compilerProduction;
     let watching;
     const watchBundle = () => {

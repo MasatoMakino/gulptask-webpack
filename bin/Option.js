@@ -38,13 +38,13 @@ function getFromPath(option) {
 }
 function getFromParams(option) {
     const compilerSet = {};
-    if (option.developmentConfigParams) {
-        option.developmentConfigParams.mode = "development";
-        compilerSet.compilerDevelopment = webpack_1.default(option.developmentConfigParams);
-    }
-    if (option.productionConfigParams) {
-        option.productionConfigParams.mode = "production";
-        compilerSet.compilerProduction = webpack_1.default(option.productionConfigParams);
-    }
+    compilerSet.compilerDevelopment = generateCompiler(option.developmentConfigParams, "development");
+    compilerSet.compilerProduction = generateCompiler(option.productionConfigParams, "production");
     return compilerSet;
+}
+function generateCompiler(param, mode) {
+    if (!param)
+        return undefined;
+    param.mode = mode;
+    return webpack_1.default(param);
 }
