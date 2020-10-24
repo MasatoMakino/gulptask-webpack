@@ -26,8 +26,4 @@ module.exports = {
       chunks: "all"
     },
   },
-  node: {
-    Buffer: false,
-    process: false,
-  },
 };
