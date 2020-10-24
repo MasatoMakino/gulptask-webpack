@@ -10,15 +10,15 @@ module.exports = {
     chunkFilename: "[name].bundle.js",
   },
   resolve: {
-    extensions: [".js", ".webpack.js", ".web.js"]
+    extensions: [".js", ".webpack.js", ".web.js"],
   },
   module: {
     rules: [
       {
         test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/
-      }
-    ]
+        exclude: /(node_modules|bower_components)/,
+      },
+    ],
   },
   plugins: [],
   optimization: {
@@ -28,9 +28,13 @@ module.exports = {
           chunks: "initial",
           name: "vendor",
           test: /node_modules/,
-          enforce: true
-        }
-      }
-    }
-  }
+          enforce: true,
+        },
+      },
+    },
+  },
+  node: {
+    Buffer: false,
+    process: false,
+  },
 };
