@@ -23,14 +23,7 @@ module.exports = {
   plugins: [],
   optimization: {
     splitChunks: {
-      cacheGroups: {
-        vendor: {
-          chunks: "initial",
-          name: "vendor",
-          test: /node_modules/,
-          enforce: true,
-        },
-      },
+      chunks: "all"
     },
   },
   node: {
