@@ -34,11 +34,13 @@ export function generateTasks(option: Option): Tasks {
   const bundleProduction = generateBundleTask(compilerSet.compilerProduction);
   const bundleDevelopment = generateBundleTask(compilerSet.compilerDevelopment);
 
-  const compilerWatcher =
-    compilerSet.compilerDevelopment ?? compilerSet.compilerProduction;
-  let watching;
+  let compilerWatcher:webpack.Compiler =compilerSet.compilerDevelopment;
+  if(compilerWatcher == null ){
+    compilerWatcher = compilerSet.compilerProduction;
+  }
+
   const watchBundle = () => {
-    watching = compilerWatcher.watch({}, (err, stats) => {
+    compilerWatcher.watch({ aggregateTimeout: 30 }, (err, stats) => {
       handleStats(stats);
     });
   };

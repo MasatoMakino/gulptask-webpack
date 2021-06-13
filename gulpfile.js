@@ -7,9 +7,9 @@ const {
   bundleDevelopment,
   bundleProduction,
   watchBundle
-// } = require("./bin").generateTasks({configPath:"./sample/webpack.tsloader.config.js"});
+} = require("./bin").generateTasks({configPath:"./sample/webpack.tsloader.config.js"});
 // } = require("./bin").generateTasks({configPath:"./sample/webpack.config.js"});
-} = require("./bin").generateTasks({developmentConfigParams:paramDev, productionConfigParams:paramProduction});
+// } = require("./bin").generateTasks({developmentConfigParams:paramDev, productionConfigParams:paramProduction});
 
 
 exports.bundleDevelopment = bundleDevelopment;

@@ -16,7 +16,6 @@ exports.get = get;
  * @param option
  */
 function generateTasks(option) {
-    var _a;
     const compilerSet = Option_1.getCompilerSet(option);
     const generateBundleTask = (compiler) => {
         if (compiler == null)
@@ -27,10 +26,12 @@ function generateTasks(option) {
     };
     const bundleProduction = generateBundleTask(compilerSet.compilerProduction);
     const bundleDevelopment = generateBundleTask(compilerSet.compilerDevelopment);
-    const compilerWatcher = (_a = compilerSet.compilerDevelopment) !== null && _a !== void 0 ? _a : compilerSet.compilerProduction;
-    let watching;
+    let compilerWatcher = compilerSet.compilerDevelopment;
+    if (compilerWatcher == null) {
+        compilerWatcher = compilerSet.compilerProduction;
+    }
     const watchBundle = () => {
-        watching = compilerWatcher.watch({}, (err, stats) => {
+        compilerWatcher.watch({ aggregateTimeout: 30 }, (err, stats) => {
             handleStats(stats);
         });
     };
