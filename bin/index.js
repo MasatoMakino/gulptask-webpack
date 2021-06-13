@@ -17,6 +17,7 @@ exports.get = get;
  */
 function generateTasks(option) {
     const compilerSet = Option_1.getCompilerSet(option);
+    const { compilerDevelopment, compilerProduction } = compilerSet;
     const generateBundleTask = (compiler) => {
         if (compiler == null)
             return undefined;
@@ -24,24 +25,25 @@ function generateTasks(option) {
             compile(cb, compiler);
         };
     };
-    const bundleProduction = generateBundleTask(compilerSet.compilerProduction);
-    const bundleDevelopment = generateBundleTask(compilerSet.compilerDevelopment);
-    let compilerWatcher = compilerSet.compilerDevelopment;
-    if (compilerWatcher == null) {
-        compilerWatcher = compilerSet.compilerProduction;
-    }
-    const watchBundle = () => {
+    const bundleProduction = generateBundleTask(compilerProduction);
+    const bundleDevelopment = generateBundleTask(compilerDevelopment);
+    return {
+        bundleDevelopment,
+        bundleProduction,
+        watchBundle: generateWatchTask(option),
+    };
+}
+exports.generateTasks = generateTasks;
+const generateWatchTask = (option) => {
+    return () => {
+        const compilerSet = Option_1.getCompilerSet(option);
+        const { compilerDevelopment, compilerProduction } = compilerSet;
+        const compilerWatcher = compilerDevelopment !== null && compilerDevelopment !== void 0 ? compilerDevelopment : compilerProduction;
         compilerWatcher.watch({ aggregateTimeout: 30 }, (err, stats) => {
             handleStats(stats);
         });
     };
-    return {
-        bundleDevelopment,
-        bundleProduction,
-        watchBundle,
-    };
-}
-exports.generateTasks = generateTasks;
+};
 /**
  * コンパイルを実行する
  * @param cb コールバック関数

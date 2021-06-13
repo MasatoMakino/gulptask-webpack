@@ -24,6 +24,7 @@ export function get(option: Option): Tasks {
  */
 export function generateTasks(option: Option): Tasks {
   const compilerSet = getCompilerSet(option);
+  const { compilerDevelopment, compilerProduction } = compilerSet;
 
   const generateBundleTask = (compiler: webpack.Compiler): Function => {
     if (compiler == null) return undefined;
@@ -31,26 +32,26 @@ export function generateTasks(option: Option): Tasks {
       compile(cb, compiler);
     };
   };
-  const bundleProduction = generateBundleTask(compilerSet.compilerProduction);
-  const bundleDevelopment = generateBundleTask(compilerSet.compilerDevelopment);
-
-  let compilerWatcher:webpack.Compiler =compilerSet.compilerDevelopment;
-  if(compilerWatcher == null ){
-    compilerWatcher = compilerSet.compilerProduction;
-  }
-
-  const watchBundle = () => {
-    compilerWatcher.watch({ aggregateTimeout: 30 }, (err, stats) => {
-      handleStats(stats);
-    });
-  };
+  const bundleProduction = generateBundleTask(compilerProduction);
+  const bundleDevelopment = generateBundleTask(compilerDevelopment);
 
   return {
     bundleDevelopment,
     bundleProduction,
-    watchBundle,
+    watchBundle: generateWatchTask(option),
   };
 }
+
+const generateWatchTask = (option: Option) => {
+  return () => {
+    const compilerSet = getCompilerSet(option);
+    const { compilerDevelopment, compilerProduction } = compilerSet;
+    const compilerWatcher = compilerDevelopment ?? compilerProduction;
+    compilerWatcher.watch({ aggregateTimeout: 30 }, (err, stats) => {
+      handleStats(stats);
+    });
+  };
+};
 
 /**
  * コンパイルを実行する
