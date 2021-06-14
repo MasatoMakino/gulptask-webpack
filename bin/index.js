@@ -34,12 +34,22 @@ function generateTasks(option) {
     };
 }
 exports.generateTasks = generateTasks;
+/**
+ * watchタスクを生成する。
+ * @param option
+ */
 const generateWatchTask = (option) => {
     return () => {
-        const compilerSet = Option_1.getCompilerSet(option);
-        const { compilerDevelopment, compilerProduction } = compilerSet;
+        /**
+         * `gulp.series(bundleDevelopment, gulp.series(watchBundle))`
+         * のようにgulpタスクをネストすると、各seriesのスコープが変わりwatchタスクではコンパイラが共有できなくなる。
+         *
+         * そのため、bundleタスクとはコンパイラが共有できない。
+         * watch開始時に別インスタンスを生成する。
+         */
+        const { compilerDevelopment, compilerProduction } = Option_1.getCompilerSet(option);
         const compilerWatcher = compilerDevelopment !== null && compilerDevelopment !== void 0 ? compilerDevelopment : compilerProduction;
-        compilerWatcher.watch({ aggregateTimeout: 30 }, (err, stats) => {
+        compilerWatcher.watch({}, (err, stats) => {
             handleStats(stats);
         });
     };
