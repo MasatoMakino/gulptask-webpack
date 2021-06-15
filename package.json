@@ -4,6 +4,9 @@
   "description": "webpack bundle task for gulp.js",
   "main": "bin/index.js",
   "types": "bin/index.d.ts",
+  "files": [
+    "bin"
+  ],
   "repository": "https://MasatoMakino@github.com/MasatoMakino/gulptask-webpack.git",
   "author": "MasatoMakino <unagiinu.g@gmail.com>",
   "license": "MIT",
