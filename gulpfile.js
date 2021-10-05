@@ -10,6 +10,7 @@ const { bundleDevelopment, bundleProduction, watchBundle } =
 // } = require("./bin").generateTasks({configPath:"./sample/webpack.config.js"});
 // } = require("./bin").generateTasks({developmentConfigParams:paramDev, productionConfigParams:paramProduction});
 
+// console.log( bundleDevelopment );
 exports.bundleDevelopment = bundleDevelopment;
 exports.bundleProduction = bundleProduction;
 //seriesがネストしても正常に動作するかを確認するためのコードです。

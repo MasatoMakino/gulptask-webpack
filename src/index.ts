@@ -1,7 +1,6 @@
 "use strict";
 
-import webpack from "webpack";
-import { Option, getCompilerSet } from "./Option";
+import { Option, getCompiler } from "./Option";
 
 export interface Tasks {
   bundleDevelopment: Function;
@@ -23,21 +22,22 @@ export function get(option: Option): Tasks {
  * @param option
  */
 export function generateTasks(option: Option): Tasks {
-  const compilerSet = getCompilerSet(option);
-  const { compilerDevelopment, compilerProduction } = compilerSet;
-
-  const generateBundleTask = (compiler: webpack.Compiler): Function => {
-    if (compiler == null) return undefined;
-    return (cb: Function) => {
-      compile(cb, compiler);
+  const generateBundleTask = (
+    option: Option,
+    mode: "development" | "production"
+  ) => {
+    return async () => {
+      const compiler = await getCompiler(option, mode);
+      if (compiler == null) return undefined;
+      compiler.run((err, stats) => {
+        handleStats(stats);
+      });
     };
   };
-  const bundleProduction = generateBundleTask(compilerProduction);
-  const bundleDevelopment = generateBundleTask(compilerDevelopment);
 
   return {
-    bundleDevelopment,
-    bundleProduction,
+    bundleDevelopment: generateBundleTask(option, "development"),
+    bundleProduction: generateBundleTask(option, "production"),
     watchBundle: generateWatchTask(option),
   };
 }
@@ -47,7 +47,7 @@ export function generateTasks(option: Option): Tasks {
  * @param option
  */
 const generateWatchTask = (option: Option) => {
-  return () => {
+  return async () => {
     /**
      * `gulp.series(bundleDevelopment, gulp.series(watchBundle))`
      * のようにgulpタスクをネストすると、各seriesのスコープが変わりwatchタスクではコンパイラが共有できなくなる。
@@ -55,28 +55,14 @@ const generateWatchTask = (option: Option) => {
      * そのため、bundleタスクとはコンパイラが共有できない。
      * watch開始時に別インスタンスを生成する。
      */
-    const { compilerDevelopment, compilerProduction } = getCompilerSet(option);
-    const compilerWatcher = compilerDevelopment ?? compilerProduction;
+    let compilerWatcher =
+      (await getCompiler(option, "development")) ??
+      (await getCompiler(option, "production"));
 
     compilerWatcher.watch({}, (err, stats) => {
       handleStats(stats);
     });
   };
-};
-
-/**
- * コンパイルを実行する
- * @param cb コールバック関数
- * @param compiler コンパイラ
- */
-const compile = (cb: Function, compiler) => {
-  compiler.run((err, stats) => {
-    handleStats(stats);
-    if (err || stats.hasErrors()) {
-      cb(err);
-    }
-    cb();
-  });
 };
 
 /**

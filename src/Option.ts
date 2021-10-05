@@ -10,59 +10,60 @@ export interface Option {
   productionConfigParams?: webpack.Configuration;
 }
 
-export interface CompilerSet {
-  compilerDevelopment?: webpack.Compiler;
-  compilerProduction?: webpack.Compiler;
-}
-
 /**
  * コンパイラセットを取得する
  * 渡されたオプションに応じ、FromPath関数かFromParams関数に分岐する。
  * @param option
+ * @param mode
  */
-export function getCompilerSet(option: Option): CompilerSet {
+export async function getCompiler(
+  option: Option,
+  mode: "development" | "production"
+): Promise<webpack.Compiler> {
   if (option?.developmentConfigParams || option?.productionConfigParams) {
-    return getFromParams(option);
+    const config =
+      mode === "development"
+        ? option.developmentConfigParams
+        : option.productionConfigParams;
+    return generateCompiler(config, mode);
   }
-  return getFromPath(option);
+  return await getFromPath(option, mode);
 }
 
-function getFromPath(option: Option): CompilerSet {
+async function getFromPath(
+  option: Option,
+  mode: "development" | "production"
+): Promise<webpack.Compiler> {
   const normalizePath = (configPath: string): string => {
     const normalized = configPath ?? "./webpack.config.json";
     if (path.isAbsolute(normalized)) return normalized;
     return path.resolve(process.cwd(), normalized);
   };
   const configPath = normalizePath(option?.configPath);
-
-  const getConfig = (
-    mode: "development" | "production"
-  ): webpack.Configuration => {
-    const config: webpack.Configuration = require(configPath);
-    config.mode = mode;
-    return config;
-  };
-
-  return {
-    compilerDevelopment: webpack(getConfig("development")),
-    compilerProduction: webpack(getConfig("production")),
-  };
+  return webpack(await getConfig(configPath, mode));
 }
 
-function getFromParams(option: Option): CompilerSet {
-  const compilerSet: CompilerSet = {};
+/**
+ * WebPack設定ファイルを読み込む
+ * @param filePath
+ * @param mode
+ */
+async function getConfig(
+  filePath: string,
+  mode: "development" | "production"
+): Promise<webpack.Configuration> {
+  const extName = path.extname(filePath);
 
-  compilerSet.compilerDevelopment = generateCompiler(
-    option.developmentConfigParams,
-    "development"
-  );
+  let config: webpack.Configuration;
+  if (extName === ".json") {
+    config = require(filePath);
+  } else {
+    // config = await import(filePath);
+    config = require(filePath);
+  }
 
-  compilerSet.compilerProduction = generateCompiler(
-      option.productionConfigParams,
-      "production"
-  );
-
-  return compilerSet;
+  config.mode = mode;
+  return config;
 }
 
 function generateCompiler(
