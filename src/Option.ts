@@ -52,16 +52,8 @@ async function getConfig(
   filePath: string,
   mode: "development" | "production"
 ): Promise<webpack.Configuration> {
-  const extName = path.extname(filePath);
-
-  let config: webpack.Configuration;
-  if (extName === ".json") {
-    config = require(filePath);
-  } else {
-    // config = await import(filePath);
-    config = require(filePath);
-  }
-
+  const configModule = await import(filePath);
+  const config: webpack.Configuration = configModule.default;
   config.mode = mode;
   return config;
 }

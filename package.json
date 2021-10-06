@@ -24,8 +24,9 @@
   },
   "scripts": {
     "build": "npx tsc --project tsconfig.json",
-    "testRun": "gulp bundleDevelopment",
-    "testRunProduction": "gulp bundleProduction",
+    "watch": "npx tsc --watch --project tsconfig.json",
+    "test_dev": "gulp bundleDevelopment",
+    "test_production": "gulp bundleProduction",
     "test_watch": "gulp watchBundle"
   }
 }
