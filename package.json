@@ -12,19 +12,21 @@
   "license": "MIT",
   "dependencies": {
     "gulp": "^4.0.2",
-    "webpack": "^5.38.1"
+    "webpack": "^5.56.1"
   },
   "devDependencies": {
-    "@types/node": "^15.12.2",
+    "@types/node": "^16.10.2",
     "@types/webpack": "^5.28.0",
     "moment": "^2.29.1",
-    "prettier": "^2.3.1",
-    "ts-loader": "^9.2.3",
-    "typescript": "^4.2.4"
+    "prettier": "^2.4.1",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.4.3"
   },
   "scripts": {
     "build": "npx tsc --project tsconfig.json",
-    "run": "gulp bundleDevelopment",
-    "runProduction": "gulp bundleProduction"
+    "watch": "npx tsc --watch --project tsconfig.json",
+    "test_dev": "gulp bundleDevelopment",
+    "test_production": "gulp bundleProduction",
+    "test_watch": "gulp watchBundle"
   }
 }
